@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dictionary.dao.DictLeafNodeDao">
+    <insert id="insert" parameterType="com.dictionary.bean.DictLeafNodeBean">
+        INSERT INTO dict_leaf_node (
+			DICT_ID,
+			DICT_CODE,
+			PARENT_ID,
+			IS_ROOT,
+			FULLPATH,
+			DICT_EN,
+			DICT_CN,
+			CRT_ID,
+			CRT_TIME,
+			UPD_ID,
+			UPD_TIME,
+			VERSION,
+			DEL_FLG
+			)
+			VALUES
+			(
+			#{dictId},
+			#{dictCode},
+			#{parentId},
+			#{isRoot},
+			#{fullpath},
+			#{dictEn},
+			#{dictCn},
+			'admin',
+			now(),
+			'admin',
+			now(),
+			'0',
+			'0'
+			);
+    </insert>
+
+    <select id="search" parameterType="com.dictionary.bean.DictLeafNodeBean"
+            resultType="com.dictionary.bean.DictLeafNodeBean">
+        SELECT
+        DICT_ID AS dictId,
+        DICT_CODE AS dictCode,
+        PARENT_ID AS parentId,
+        IS_ROOT AS isRoot,
+        FULLPATH AS fullpath,
+        DICT_EN AS dictEn,
+        DICT_CN AS dictCn,
+        CRT_ID AS crtId,
+        CRT_TIME AS crtTime,
+        UPD_ID AS updId,
+        UPD_TIME AS updTime
+        FROM dict_leaf_node
+        where DEL_FLG = 0
+        <if test="dictId!=null">
+            and DICT_ID = #{dictId}
+        </if>
+        <if test="dictCode!=null">
+            and DICT_CODE = #{dictCode}
+        </if>
+        <if test="parentId!=null">
+            and PARENT_ID = #{parentId}
+        </if>
+        <if test="isRoot!=null">
+            and IS_ROOT = #{isRoot}
+        </if>
+        <if test="fullpath!=null">
+            and fullpath LIKE CONCAT('%','${fullpath}','%')
+        </if>
+        <if test="dictEn!=null">
+            and DICT_EN = #{dictEn}
+        </if>
+        <if test="dictCn!=null">
+            and DICT_CN = #{dictCn}
+        </if>
+    </select>
+    <update id="update" parameterType="com.dictionary.bean.DictLeafNodeBean">
+			UPDATE dict_leaf_node
+            SET DEL_FLG = 0
+            <if test="dictCode!=null">
+                ,DICT_CODE = #{dictCode}
+            </if>
+        <if test="dictEn!=null">
+            ,DICT_EN = #{dictEn}
+        </if>
+        <if test="dictCn!=null">
+            ,DICT_CN = #{dictEn}
+        </if>
+        where DICT_ID = #{dictId}
+	</update>
+
+    <delete id="delete" parameterType="String">
+      DELETE
+        FROM
+            dict_leaf_node
+        WHERE
+            DICT_ID = #{dictId}
+    </delete>
+</mapper>

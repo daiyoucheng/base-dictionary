@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dictionary.dao.DictNodeValueDao">
+    <insert id="insert" parameterType="com.dictionary.dao.DictNodeValueDao">
+        INSERT INTO dict_node_value (
+        DATA_ID,
+        DICT_ID,
+        DATA_VALUE,
+        DATA_EN,
+        DATA_CN,
+        CRT_ID,
+        CRT_TIME,
+        UPD_ID,
+        UPD_TIME,
+        VERSION,
+        DEL_FLG
+        )
+        VALUES
+        (
+		#{dataId},
+		#{dictId},
+		#{dataValue},
+		#{dataEn},
+		#{dataCn},
+		'admin',
+		now(),
+		'admin',
+		now(),
+		'0'
+        )
+    </insert>
+
+    <select id="select" parameterType="com.dictionary.bean.DictNodeValueBean" resultType="com.dictionary.bean.DictNodeValueBean">
+        SELECT
+            DATA_ID AS dataId,
+            DICT_ID AS dictId,
+            DATA_VALUE AS dataValue,
+            DATA_EN AS dataEn,
+            DATA_CN AS dataCn
+        FROM
+            dict_node_value
+        WHERE DEL_FLG = 0
+        <if test="dataId!=null">
+            and DATA_ID = #{dataId}
+        </if>
+        <if test="dictId!=null">
+            and DICT_ID = #{dictId}
+        </if>
+        <if test="dataValue!=null">
+            and DATA_VALUE = #{dataValue}
+        </if>
+        <if test="dataEn!=null">
+            and DATA_EN = #{dataEn}
+        </if>
+        <if test="dataCn!=null">
+            and DATA_CN = #{dataCn}
+        </if>
+    </select>
+    <update id="update" parameterType="com.dictionary.bean.DictNodeValueBean">
+        UPDATE dict_node_value
+        SET DEL_FLG = 0
+        <if test="dataValue!=null">
+            ,DATA_VALUE = #{dataValue}
+        </if>
+        <if test="dataEn!=null">
+            ,DATA_EN = #{dataEn}
+        </if>
+        <if test="dataCn!=null">
+            ,DATA_CN = #{dataCn}
+        </if>
+        WHERE
+            DATA_ID = #{dataId}
+    </update>
+    <delete id="delete" parameterType="com.dictionary.bean.DictNodeValueBean">
+        DELETE
+        FROM
+            dict_node_value
+        WHERE
+            data_id = #{dataId}
+    </delete>
+</mapper>
